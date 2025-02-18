@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode } from
 import { CouponsService } from './coupons.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
-import { IdValidationPipe } from 'src/id-validation/id-validation.pipe';
+import { IdValidationPipe } from '../id-validation/id-validation.pipe';
 import { ApplyCouponDto } from './dto/apply-coupon.dto';
 
 @Controller('coupons')

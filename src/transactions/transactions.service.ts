@@ -1,19 +1,20 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction, TransactionContents } from './entities/transaction.entity';
 import { Between, FindManyOptions, Repository } from 'typeorm';
-import { Product } from 'src/products/entities/product.entity';
-import { NotFoundError } from 'rxjs';
-import { endOfDay, formatDate, isValid, parseISO, startOfDay } from 'date-fns';
+import { Product } from '../products/entities/product.entity';
+import { endOfDay, isValid, parseISO, startOfDay } from 'date-fns';
+import { CouponsService } from '../coupons/coupons.service';
+
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectRepository(Transaction) private readonly transactionRepository: Repository<Transaction>,
     @InjectRepository(TransactionContents) private readonly transactionContentRepository: Repository<TransactionContents>,
-    @InjectRepository(Product) private readonly productContent: Repository<Product>
+    @InjectRepository(Product) private readonly productContent: Repository<Product>,
+    private readonly couponContent: CouponsService
   ) { }
   async create(createTransactionDto: CreateTransactionDto) {
 
@@ -24,6 +25,19 @@ export class TransactionsService {
       const total = createTransactionDto.contents.reduce((total, item) => total + (item.quantity * item.price), 0)
 
       transaction.total = total
+
+      if (createTransactionDto.coupon) {
+        const { cupon, message } = await this.couponContent.applycoupon(createTransactionDto.coupon)
+
+        if (!cupon) {
+          throw new NotFoundException('Cupón no válido')
+        }
+        transaction.coupon = cupon.name
+        transaction.discount = (cupon.percentage / 100) * total
+        const descuento = cupon.percentage / 100
+        const subtotal = (total * descuento)
+        transaction.total = total - subtotal
+      }
 
       for (const content of createTransactionDto.contents) {
         const errors: string[] = []

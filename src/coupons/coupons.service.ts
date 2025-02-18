@@ -60,7 +60,7 @@ export class CouponsService {
     }
 
     const date = new Date()
-    const expirationDate = endOfDay(date)
+    const expirationDate = endOfDay(cupon.expirationDate)
 
     if (isAfter(date, expirationDate)) {
       throw new BadRequestException('Cupón Expirado')
@@ -69,7 +69,7 @@ export class CouponsService {
 
     return {
       message: 'Cupon valido',
-      coupon
+      cupon
     }
   }
 }
