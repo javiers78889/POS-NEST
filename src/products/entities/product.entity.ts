@@ -1,5 +1,5 @@
 import { Category } from "../../categories/entities/category.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Product {
@@ -12,12 +12,13 @@ export class Product {
     @Column({ type: 'varchar', length: 120, nullable: true, default: 'default.svg' })
     image: string
 
-    @Column({type: 'decimal'})
-    price:number
+    @Column({ type: 'decimal' })
+    price: number
 
-    @Column({type: 'int'})
+    @Column({ type: 'int' })
     inventory: number
 
-    @ManyToOne(()=> Category)
-    category: Category
+    @ManyToOne(() => Category, { eager: true })
+    @JoinColumn({ name: "categoryId" }) // 🔥 Agregar JoinColumn para obtener el ID directamente
+    category: Category;
 }

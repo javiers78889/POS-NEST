@@ -3,7 +3,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class CategoriesService {
@@ -24,8 +24,18 @@ export class CategoriesService {
     return todo;
   }
 
-  async findOne(id: number) {
-    const find = await this.categoryRepository.findOne({ where: { id } })
+  async findOne(id: number, products?: boolean) {
+
+    const options: FindManyOptions<Category> = {
+      where: { id }
+    }
+
+    if (products) {
+      options.relations = {
+        product: true
+      }
+    }
+    const find = await this.categoryRepository.findOne(options)
     if (!find) {
       throw new NotFoundException('La categoria no existe')
     }
