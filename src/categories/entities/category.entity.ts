@@ -1,5 +1,5 @@
 import { Product } from '../../products/entities/product.entity'
-import {  Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 
 @Entity()
@@ -12,4 +12,5 @@ export class Category {
 
     @OneToMany(() => Product, (product) => product.category, { cascade: true })
     product: Product[]
+    
 }

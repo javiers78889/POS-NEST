@@ -4,21 +4,24 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 @Entity()
 export class Product {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column({ type: 'varchar', length: 60 })
-    name: string
+    name: string;
 
     @Column({ type: 'varchar', length: 120, nullable: true, default: 'default.svg' })
-    image: string
+    image: string;
 
     @Column({ type: 'decimal' })
-    price: number
+    price: number;
 
     @Column({ type: 'int' })
-    inventory: number
+    inventory: number;
 
-    @ManyToOne(() => Category, { eager: true })
-    @JoinColumn({ name: "categoryId" }) // 🔥 Agregar JoinColumn para obtener el ID directamente
+    @ManyToOne(() => Category, category => category.product)
+    @JoinColumn({ name: 'categoryId' }) // ✅ Esto vincula la clave foránea
     category: Category;
+
+    @Column({ type: 'int' }) // ✅ Ahora es una columna real
+    categoryId: number;
 }
