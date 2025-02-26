@@ -69,7 +69,8 @@ export class TransactionsService {
     })
 
 
-    return 'Venta Almacenada';
+    return { message: 'Venta Almacenada' };
+
   }
 
   findAll(transactionDate?: string) {
