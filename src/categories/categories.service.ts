@@ -33,7 +33,12 @@ export class CategoriesService {
     if (products) {
       options.relations = {
         product: true
-      }
+      },
+        options.order = {
+          product: {
+            inventory: 'DESC'
+          }
+        }
     }
     const find = await this.categoryRepository.findOne(options)
     if (!find) {
