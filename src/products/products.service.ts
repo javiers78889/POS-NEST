@@ -77,8 +77,8 @@ export class ProductsService {
       product.category = category
 
     }
-
-    return await this.productRepository.save(product);
+    await this.productRepository.save(product)
+    return { message: 'Producto actualizado' };
   }
 
   async remove(id: number) {
