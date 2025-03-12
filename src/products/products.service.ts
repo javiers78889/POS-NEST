@@ -89,6 +89,6 @@ export class ProductsService {
       throw new NotFoundException(error)
     }
     await this.productRepository.remove([product])
-    return `Producto eliminado`;
+    return { message: `Producto eliminado` };
   }
 }
