@@ -4,9 +4,10 @@ import { ProductsController } from './products.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from '../categories/entities/category.entity';
 import { Product } from './entities/product.entity';
+import { UploadImageModule } from 'src/upload-image/upload-image.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, Product])],
+  imports: [TypeOrmModule.forFeature([Category, Product]), UploadImageModule],
   controllers: [ProductsController],
   providers: [ProductsService],
 })
